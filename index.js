@@ -1,15 +1,19 @@
 try {
 
   require('dotenv').config()
-
-  // Telegraf
+  const { Configuration, OpenAIApi } = require("openai");
   const { Telegraf } = require('telegraf');
   var http = require('http');
+
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
   const bot = new Telegraf(process.env.BOT_TOKEN);
 
   // Listen only for Heroku deployment
   const port = process.env.PORT || 3000;
-  
+
   //create a server object:
   http.createServer(function (req, res) {
     res.write('Hello World!'); //write a response
@@ -17,12 +21,6 @@ try {
   }).listen(port, function () {
     console.log(`server start at port ${port}`); //the server object listens on port 3000
   });
-
-  // method that returns reply from ChatGPT
-  async function sendResponse(ctx) {
-    const response = "";
-    bot.telegram.sendMessage(ctx.chat.id, response);
-  }
 
   function sendHelpMessage(ctx) {
     bot.telegram.sendMessage(ctx.chat.id,
@@ -51,7 +49,22 @@ try {
       sendHelpMessage(ctx)
     })
 
-    bot.on('text', (ctx) => ctx.reply('Hello World'));
+    bot.on('text', async (ctx) => {
+      // Send text and Get response from ChatGPT
+      const completion = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: ctx.message.text,
+        max_tokens: 80,
+        temperature: 0.6,
+      });
+      console.log('completion', completion.data.choices);
+      // Concatenate the text from all the choices in the completion data
+      let response = '';
+      for (const choice of completion.data.choices) {
+        response += choice.text;
+      }
+      ctx.reply(response);
+    });
     //method to start get the script to pulling updates for telegram 
     bot.launch();
 
