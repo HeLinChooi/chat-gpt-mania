@@ -52,7 +52,7 @@ try {
     bot.on('text', async (ctx) => {
       // Send text and Get response from ChatGPT
       const completion = await openai.createCompletion({
-        model: "text-davinci-003",
+        model: "gpt-3.5-turbo",
         prompt: ctx.message.text,
         max_tokens: 80,
         temperature: 0.6,
