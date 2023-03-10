@@ -49,20 +49,32 @@ try {
       sendHelpMessage(ctx)
     })
 
+    const assistantResponses = [];
+    const userInputs = [];
+    const conversations = [];
+
     bot.on('text', async (ctx) => {
       // Send text and Get response from ChatGPT
-      const completion = await openai.createCompletion({
-        model: "gpt-3.5-turbo",
-        prompt: ctx.message.text,
+      const chatCompletion = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo-0301",
+        messages: [
+          {"role": "system", "content": "You are a helpful assistant."},
+          ...conversations,
+          {"role": "user", "content": ctx.message.text},
+        ],
         max_tokens: 80,
         temperature: 0.6,
       });
-      console.log('completion', completion.data.choices);
+      console.log('chatCompletion.data.choices', chatCompletion.data.choices);
       // Concatenate the text from all the choices in the completion data
       let response = '';
-      for (const choice of completion.data.choices) {
-        response += choice.text;
+      for (const choice of chatCompletion.data.choices) {
+        response += choice.message.content;
       }
+      // Save the conversation
+      conversations.push({ "role": "user", "content": ctx.message.text }, { "role": "system", "content": response });
+      // userInputs.push({ "role": "user", "content": ctx.message.text });
+      // assistantResponses.push({ "role": "system", "content": response});
       ctx.reply(response);
     });
     //method to start get the script to pulling updates for telegram 
