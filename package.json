@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "pm2start": "pm2 start my-web-service.json",
+    "pm2start": "pm2 start my-web-service.json --unhandled-rejections=strict",
     "pm2stop": "pm2 stop my-web-service.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
