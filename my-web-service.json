@@ -1,0 +1,5 @@
+{
+  "name": "my-web-service",
+  "script": "index.js",
+  "instances": 1
+}
