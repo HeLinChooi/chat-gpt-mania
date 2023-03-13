@@ -1,5 +1,11 @@
 # ChatGPT Mania
 
+## Tools needed
+- Git (https://git-scm.com/downloads)
+- NodeJS (https://nodejs.org/en/)
+- Any IDE/Editor e.g. VSCode
+- Telegram App
+
 ## Setup Guide
 1. Run below command to setup the server.
 
@@ -11,7 +17,7 @@ npm install
 
 2. Create a bot by messaging @BotFather and get the `bot token`.
 
-https://github.com/HeLinChooi/chat-gpt-mania.git
+https://core.telegram.org/bots#how-do-i-create-a-bot
 
 3. Get `OpenAI API key` from https://platform.openai.com/docs/quickstart/add-your-api-key.
 
